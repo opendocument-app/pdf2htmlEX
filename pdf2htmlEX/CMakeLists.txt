@@ -239,7 +239,7 @@ install (TARGETS libpdf2htmlEX
 )
 install (
     DIRECTORY pdf2htmlEX/src/
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    DESTINATION include
     FILES_MATCHING PATTERN "*.h"
 )
 
