@@ -183,11 +183,42 @@ void HTMLRenderer::process(PDFDoc *doc)
 
     post_process();
 
-    bg_renderer = nullptr;
-    fallback_bg_renderer = nullptr;
+    if (param.delay_background == 0)
+    {
+        bg_renderer = nullptr;
+        fallback_bg_renderer = nullptr;
+    }
 
     if(param.quiet == 0)
         cerr << endl;
+}
+
+bool HTMLRenderer::renderPage(PDFDoc *doc, int pageno)
+{
+    if (param.delay_background == 0)
+    {
+        return false;
+    }
+
+    if (page_cache.find(pageno) == page_cache.end())
+    {
+        cerr << "Page number " << pageno << " not found in page cache" << endl;
+        return false;
+    }
+
+    covered_text_detector = page_cache[pageno].covered_text_detector;
+
+    if (bg_renderer->render_page(cur_doc, pageno))
+    {
+        return true;
+    }
+    else if (fallback_bg_renderer)
+    {
+        if (fallback_bg_renderer->render_page(cur_doc, pageno))
+            return true;
+    }
+
+    return false;
 }
 
 void HTMLRenderer::setDefaultCTM(const double *ctm)
@@ -243,14 +274,21 @@ void HTMLRenderer::endPage() {
 
     if(param.process_nontext)
     {
-        if (bg_renderer->render_page(cur_doc, pageNum))
+        if (param.delay_background)
         {
             bg_renderer->embed_image(pageNum);
         }
-        else if (fallback_bg_renderer)
+        else
         {
-            if (fallback_bg_renderer->render_page(cur_doc, pageNum))
-                fallback_bg_renderer->embed_image(pageNum);
+            if (bg_renderer->render_page(cur_doc, pageNum))
+            {
+                bg_renderer->embed_image(pageNum);
+            }
+            else if (fallback_bg_renderer)
+            {
+                if (fallback_bg_renderer->render_page(cur_doc, pageNum))
+                    fallback_bg_renderer->embed_image(pageNum);
+            }
         }
     }
 
@@ -293,6 +331,13 @@ void HTMLRenderer::endPage() {
     if(param.split_pages)
     {
         f_pages.fs << "</div>" << endl;
+    }
+
+    if (param.delay_background)
+    {
+        page_cache[this->pageNum] = {
+            .covered_text_detector = covered_text_detector,
+        };
     }
 }
 

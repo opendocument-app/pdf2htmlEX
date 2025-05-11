@@ -21,6 +21,7 @@ namespace pdf2htmlEX {
 class CoveredTextDetector
 {
 public:
+    CoveredTextDetector();
 
     CoveredTextDetector(Param & param);
 
@@ -60,7 +61,7 @@ private:
     // x00, y00, x01, y01; x10, y10, x11, y11;...
     std::vector<double> char_bboxes;
     std::vector<int> char_pts_visible;
-    Param & param;
+    Param * param;
 };
 
 }

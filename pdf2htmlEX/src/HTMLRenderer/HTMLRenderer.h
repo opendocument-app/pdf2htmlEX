@@ -80,6 +80,8 @@ struct HTMLRenderer : OutputDev
 
     void process(PDFDoc * doc);
 
+    bool renderPage(PDFDoc * doc, int pageno);
+
     ////////////////////////////////////////////////////
     // OutputDev interface
     ////////////////////////////////////////////////////
@@ -379,6 +381,11 @@ protected:
 
     CoveredTextDetector covered_text_detector;
     DrawingTracer tracer;
+
+    struct PageCache {
+        CoveredTextDetector covered_text_detector;
+    };
+    std::unordered_map<int, PageCache> page_cache;
 };
 
 } //namespace pdf2htmlEX
