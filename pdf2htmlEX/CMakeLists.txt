@@ -46,7 +46,7 @@ set(POPPLER_LIBRARIES ${POPPLER_LIBRARIES}
   ${CMAKE_SOURCE_DIR}/../poppler/build/libpoppler.a
 )
 
-find_package(GLIB REQUIRED COMPONENTS gio)
+pkg_check_modules(GLIB2 IMPORTED_TARGET "glib-2.0>=2.80" "gio-2.0>=2.80")
 include_directories(${GLIB_INCLUDE_DIRS})
 link_directories(${GLIB_LIBRARY_DIRS})
 
