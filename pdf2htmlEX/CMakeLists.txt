@@ -34,6 +34,8 @@ include_directories(
   ../poppler/poppler
   ../poppler
 )
+include_directories(${POPPLER_INCLUDE_DIRS})
+link_directories(${POPPLER_LIBRARY_DIRS})
 #
 # The following order is critical as the glib functions use functions 
 # located in the main poppler library 
