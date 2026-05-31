@@ -38,7 +38,7 @@ void DrawingTracer::reset(GfxState *state)
     Matrix ctm, ictm;
     state->getCTM(&ctm);
     ctm.invertTo(&ictm);
-    tm_transform_bbox(ictm.m, pbox);
+    tm_transform_bbox(ictm.m.data(), pbox);
     cairo_rectangle_t page_box { pbox[0], pbox[1], pbox[2] - pbox[0], pbox[3] - pbox[1] };
     cairo_surface_t * surface = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA, &page_box);
     cairo = cairo_create(surface);
