@@ -25,10 +25,10 @@ export POPPLER_VERSION=poppler-26.05.0
 #export POPPLER_VERSION=poppler-0.81.0
 
 # see: https://github.com/fontforge/fontforge/releases
-# current working: 20230101
+# current working: 20251009
 
-#export FONTFORGE_VERSION=20251009
-export FONTFORGE_VERSION=20230101
+export FONTFORGE_VERSION=20251009
+#export FONTFORGE_VERSION=20230101
 #export FONTFORGE_VERSION=20220308
 #export FONTFORGE_VERSION=20190801
 #export FONTFORGE_VERSION=20190413
