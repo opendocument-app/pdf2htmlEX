@@ -3,10 +3,10 @@
 # This shell script exports environment variables for the latest software
 # versions
 
-# see: https://poppler.freedesktop.org/releases.html
-# current working: 24.06.1
-
 export PDF2HTMLEX_VERSION=0.18.8.rc2
+
+# see: https://poppler.freedesktop.org/releases.html
+# current working: 26.05.0
 
 export POPPLER_VERSION=poppler-26.05.0
 #export POPPLER_VERSION=poppler-24.06.1
