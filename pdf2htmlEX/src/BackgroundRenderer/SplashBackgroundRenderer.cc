@@ -75,7 +75,7 @@ void SplashBackgroundRenderer::beginString(GfxState *state, const GooString * st
 {
     if (param.proof == 2)
         proof_begin_string(state, this);
-    SplashOutputDev::beginString(state, *str);
+    SplashOutputDev::beginString(state, str->toStr());
 }
 
 void SplashBackgroundRenderer::endTextObject(GfxState *state)
