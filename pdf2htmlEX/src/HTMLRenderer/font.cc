@@ -265,12 +265,13 @@ string HTMLRenderer::dump_type3_font (GfxFont * font, FontInfo & info)
             cairo_matrix_multiply(&m1, &m1, &m2);
             cairo_set_font_matrix(cr, &m1);
 
-            cairo_glyph_t glyph;
-            glyph.index = cur_font->getGlyph(code);
-            glyph.x = 0;
-            glyph.y = GLYPH_DUMP_EM_SIZE;
-            cairo_show_glyphs(cr, &glyph, 1);
-
+            if (auto glyphIndexOpt = cur_font->getGlyph(code)) {
+                cairo_glyph_t glyph;
+                glyph.index = *glyphIndexOpt;
+                glyph.x = 0;
+                glyph.y = GLYPH_DUMP_EM_SIZE;
+                cairo_show_glyphs(cr, &glyph, 1);
+            }
 
             // apply the type 3 font's font matrix before m1
             // such that we got the mapping from type 3 font space to user space, then we will be able to calculate mapped position for ox,oy and glyph_width
@@ -542,7 +543,7 @@ void HTMLRenderer::embed_font(const string & filepath, GfxFont * font, FontInfo 
 
             // To locate CID2GID for the font
             // as in CairoFontEngine.cc
-            if((code2GID = _font->getCIDToGID()))
+            if(!(code2GID = _font->getCIDToGID()).empty())
             {
                 // use the mapping stored in _font
             }
@@ -632,7 +633,7 @@ void HTMLRenderer::embed_font(const string & filepath, GfxFont * font, FontInfo 
             if(info.use_tounicode)
             {
                 int n = ctu ?
-                  ctu->mapToUnicode(cur_code, &pu)) :
+                  ctu->mapToUnicode(cur_code, &pu) :
                   0;
                 u = check_unicode(pu, n, cur_code, font);
             }

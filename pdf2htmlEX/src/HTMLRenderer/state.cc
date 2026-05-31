@@ -252,7 +252,7 @@ void HTMLRenderer::check_state_change(GfxState * state)
         m1[5] = state->getRise();
         m1[1] = m1[2] = m1[4] = 0;
 
-        tm_multiply(m2, state->getCTM(), state->getTextMat()); 
+        tm_multiply(m2, state->getCTM().data(), state->getTextMat().data()); 
         tm_multiply(new_text_tm, m2, m1);
 
         if(!tm_equal(new_text_tm, cur_text_tm))
