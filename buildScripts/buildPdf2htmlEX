@@ -20,4 +20,4 @@ rm -rf build
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$PDF2HTMLEX_PREFIX ..
-make $MAKE_PARALLEL
+make $MAKE_PARALLEL VERBOSE=1

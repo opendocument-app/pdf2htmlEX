@@ -158,7 +158,7 @@ string HTMLRenderer::dump_embedded_font (GfxFont * font, FontInfo & info)
             throw 0;
         }
 
-        obj.streamReset();
+        obj.streamRewind();
 
         filepath = (char*)str_fmt("%s/f%llx%s", param.tmp_dir.c_str(), fn_id, suffix.c_str());
         tmp_files.add(filepath);
@@ -205,8 +205,8 @@ string HTMLRenderer::dump_type3_font (GfxFont * font, FontInfo & info)
     auto used_map = preprocessor.get_code_map(hash_ref(font->getID()));
 
     //calculate transformed metrics
-    const double * font_bbox = font->getFontBBox();
-    const double * font_matrix = font->getFontMatrix();
+    const double * font_bbox = font->getFontBBox().data();
+    const double * font_matrix = font->getFontMatrix().data();
     double transformed_bbox[4];
     memcpy(transformed_bbox, font_bbox, 4 * sizeof(double));
     /*
@@ -265,12 +265,13 @@ string HTMLRenderer::dump_type3_font (GfxFont * font, FontInfo & info)
             cairo_matrix_multiply(&m1, &m1, &m2);
             cairo_set_font_matrix(cr, &m1);
 
-            cairo_glyph_t glyph;
-            glyph.index = cur_font->getGlyph(code, nullptr, 0);
-            glyph.x = 0;
-            glyph.y = GLYPH_DUMP_EM_SIZE;
-            cairo_show_glyphs(cr, &glyph, 1);
-
+            if (auto glyphIndexOpt = cur_font->getGlyph(code)) {
+                cairo_glyph_t glyph;
+                glyph.index = *glyphIndexOpt;
+                glyph.x = 0;
+                glyph.y = GLYPH_DUMP_EM_SIZE;
+                cairo_show_glyphs(cr, &glyph, 1);
+            }
 
             // apply the type 3 font's font matrix before m1
             // such that we got the mapping from type 3 font space to user space, then we will be able to calculate mapped position for ox,oy and glyph_width
@@ -403,8 +404,7 @@ void HTMLRenderer::embed_font(const string & filepath, GfxFont * font, FontInfo 
         ofstream((char*)fn, ofstream::binary) << ifstream(filepath).rdbuf();
     }
 
-    int * code2GID = nullptr;
-    int code2GID_len = 0;
+    std::vector<int> code2GID;
     int maxcode = 0;
 
     Gfx8BitFont * font_8bit = nullptr;
@@ -486,10 +486,9 @@ void HTMLRenderer::embed_font(const string & filepath, GfxFont * font, FontInfo 
             else
             {
                 ffw_reencode_glyph_order();
-                if(std::unique_ptr<FoFiTrueType> fftt = FoFiTrueType::load((char*)filepath.c_str()))
+                if(std::unique_ptr<FoFiTrueType> fftt = FoFiTrueType::load(filepath.c_str(), 0))
                 {
                     code2GID = font_8bit->getCodeToGIDMap(fftt.get());
-                    code2GID_len = 256;
                 }
             }
         }
@@ -544,17 +543,16 @@ void HTMLRenderer::embed_font(const string & filepath, GfxFont * font, FontInfo 
 
             // To locate CID2GID for the font
             // as in CairoFontEngine.cc
-            if((code2GID = _font->getCIDToGID()))
+            if(!(code2GID = _font->getCIDToGID()).empty())
             {
                 // use the mapping stored in _font
-                code2GID_len = _font->getCIDToGIDLen();
             }
             else
             {
                 // use the mapping stored in the file
-                if(std::unique_ptr<FoFiTrueType> fftt = FoFiTrueType::load((char*)filepath.c_str()))
+                if(std::unique_ptr<FoFiTrueType> fftt = FoFiTrueType::load(filepath.c_str(), 0))
                 {
-                    code2GID = _font->getCodeToGIDMap(fftt.get(), &code2GID_len);
+                    code2GID = _font->getCodeToGIDMap(fftt.get());
                 }
             }
         }
@@ -592,17 +590,13 @@ void HTMLRenderer::embed_font(const string & filepath, GfxFont * font, FontInfo 
         unordered_set<int> codeset;
         bool name_conflict_warned = false;
 
-        auto ctu = font->getToUnicode();
-        // NOTE: Poppler has changed its effective ABI
-        // in now expects the USER to increment any ref counters
-        assert(ctu);
-        ((CharCodeToUnicode *)ctu)->incRefCnt();
+        const CharCodeToUnicode* ctu = font->getToUnicode();
 
         std::fill(cur_mapping.begin(), cur_mapping.end(), -1);
         std::fill(width_list.begin(), width_list.end(), -1);
 
-        if(code2GID)
-            maxcode = min<int>(maxcode, code2GID_len - 1);
+        if(!code2GID.empty())
+            maxcode = min<int>(maxcode, code2GID.size() - 1);
 
         bool is_truetype = is_truetype_suffix(suffix);
         int max_key = maxcode;
@@ -625,7 +619,7 @@ void HTMLRenderer::embed_font(const string & filepath, GfxFont * font, FontInfo 
             }
 
             int mapped_code = cur_code;
-            if(code2GID)
+            if(!code2GID.empty())
             {
                 // for fonts with GID (e.g. TTF) we need to map GIDs instead of codes
                 if((mapped_code = code2GID[cur_code]) == 0) continue;
@@ -639,7 +633,7 @@ void HTMLRenderer::embed_font(const string & filepath, GfxFont * font, FontInfo 
             if(info.use_tounicode)
             {
                 int n = ctu ?
-                  (((CharCodeToUnicode *)ctu)->mapToUnicode(cur_code, &pu)) :
+                  ctu->mapToUnicode(cur_code, &pu) :
                   0;
                 u = check_unicode(pu, n, cur_code, font);
             }
@@ -760,9 +754,6 @@ void HTMLRenderer::embed_font(const string & filepath, GfxFont * font, FontInfo 
         {
             cerr << "space width: " << info.space_width << endl;
         }
-
-        if(ctu)
-            ((CharCodeToUnicode *)ctu)->decRefCnt();
     }
 
     /*
@@ -897,7 +888,7 @@ const FontInfo * HTMLRenderer::install_font(GfxFont * font)
 #endif
         return &new_font_info;
     }
-    if(font->getWMode()) {
+    if(font->getWMode() != GfxFont::WritingMode::Horizontal) {
         cerr << "Writing mode is unsupported and will be rendered as Image" << endl;
         export_remote_default_font(new_fn_id);
         return &new_font_info;
