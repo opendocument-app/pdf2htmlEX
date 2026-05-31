@@ -109,7 +109,7 @@ public:
         Matrix m;
         memcpy(m.m.data(), new_value, 4 * sizeof(double));
         auto iter = value_map.lower_bound(m);
-        if((iter != value_map.end()) && (tm_equal(m.m.data(), iter->first.m, 4)))
+        if((iter != value_map.end()) && (tm_equal(m.m.data(), iter->first.m.data(), 4)))
         {
             return iter->second;
         }
