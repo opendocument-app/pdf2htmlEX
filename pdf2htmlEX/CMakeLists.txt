@@ -24,9 +24,6 @@ add_custom_target(dist
 find_package(PkgConfig)
 
 
-find_package(GLIB 2.6 REQUIRED COMPONENTS gio gobject)
-
-
 # SINCE we have a very intimate relationship with a particular version of 
 # poppler... we explicitly describe the poppler include and library 
 # paths.
