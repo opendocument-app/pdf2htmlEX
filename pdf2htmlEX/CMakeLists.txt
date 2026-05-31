@@ -24,11 +24,6 @@ add_custom_target(dist
 find_package(PkgConfig)
 
 
-find_package(GLIB REQUIRED COMPONENTS gio)
-include_directories(${GLIB_INCLUDE_DIRS})
-link_directories(${GLIB_LIBRARY_DIRS})
-
-
 # SINCE we have a very intimate relationship with a particular version of 
 # poppler... we explicitly describe the poppler include and library 
 # paths.
@@ -49,6 +44,11 @@ set(POPPLER_LIBRARIES ${POPPLER_LIBRARIES}
   ${CMAKE_SOURCE_DIR}/../poppler/build/glib/libpoppler-glib.a
   ${CMAKE_SOURCE_DIR}/../poppler/build/libpoppler.a
 )
+
+
+find_package(GLIB REQUIRED COMPONENTS gio)
+include_directories(${GLIB_INCLUDE_DIRS})
+link_directories(${GLIB_LIBRARY_DIRS})
 
 
 if(ENABLE_SVG)
