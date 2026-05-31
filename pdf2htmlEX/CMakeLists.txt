@@ -28,6 +28,7 @@ find_package(PkgConfig)
 # poppler... we explicitly describe the poppler include and library 
 # paths.
 #
+list(APPEND CMAKE_MODULE_PATH "../poppler/cmake")
 include_directories(
   ../poppler/build/poppler
   ../poppler/build
@@ -45,11 +46,9 @@ set(POPPLER_LIBRARIES ${POPPLER_LIBRARIES}
   ${CMAKE_SOURCE_DIR}/../poppler/build/libpoppler.a
 )
 
-
 find_package(GLIB REQUIRED COMPONENTS gio)
 include_directories(${GLIB_INCLUDE_DIRS})
 link_directories(${GLIB_LIBRARY_DIRS})
-
 
 if(ENABLE_SVG)
     pkg_check_modules(CAIRO REQUIRED cairo>=1.10.0)
@@ -73,6 +72,7 @@ if(ENABLE_SVG)
 #    set(PDF2HTMLEX_LIBS ${PDF2HTMLEX_LIBS} ${FREETYPE_LIBRARIES})
 endif()
 
+
 # SINCE we have a very intimate relationship with a particular version of 
 # fontforge... we explicitly describe the fontforge include and library 
 # paths.
@@ -83,7 +83,7 @@ include_directories(
   ../fontforge/build/inc
   ../fontforge/inc
 )
-#
+list(APPEND CMAKE_MODULE_PATH "../fontforge/cmake")
 include_directories(${FONTFORGE_INCLUDE_DIRS})
 link_directories(${FONTFORGE_LIBRARY_DIRS})
 set(FONTFORGE_LIBRARIES ${FONTFORGE_LIBRARIES}
