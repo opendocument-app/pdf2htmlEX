@@ -28,7 +28,7 @@ find_package(PkgConfig)
 # poppler... we explicitly describe the poppler include and library 
 # paths.
 #
-list(APPEND CMAKE_MODULE_PATH "../poppler/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/../poppler/cmake")
 include_directories(
   ../poppler/build/poppler
   ../poppler/build
@@ -83,7 +83,7 @@ include_directories(
   ../fontforge/build/inc
   ../fontforge/inc
 )
-list(APPEND CMAKE_MODULE_PATH "../fontforge/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/../fontforge/cmake")
 include_directories(${FONTFORGE_INCLUDE_DIRS})
 link_directories(${FONTFORGE_LIBRARY_DIRS})
 set(FONTFORGE_LIBRARIES ${FONTFORGE_LIBRARIES}
