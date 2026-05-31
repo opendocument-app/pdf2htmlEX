@@ -403,7 +403,7 @@ void DrawingTracer::draw_char(GfxState *state, double x, double y, double width,
 {
 //printf("x=%f,y=%f,width=%f,height=%f\n", x, y, width, height);
     Matrix tm, itm;
-    memcpy(tm.m, state->getTextMat(), sizeof(tm.m));
+    memcpy(tm.m.data(), state->getTextMat().data(), sizeof(tm.m));
 
 //printf("tm = %f,%f,%f,%f,%f,%f\n", tm.m[0], tm.m[1], tm.m[2], tm.m[3], tm.m[4], tm.m[5]);
     double cx = state->getCurX(), cy = state->getCurY(), fs = state->getFontSize(),
@@ -424,7 +424,7 @@ void DrawingTracer::draw_char(GfxState *state, double x, double y, double width,
 //printf("char_m = %f,%f,%f,%f,%f,%f\n", char_m[0], char_m[1], char_m[2], char_m[3], char_m[4], char_m[5]);
 
     double final_m[6];
-    tm_multiply(final_m, tm.m, char_m);
+    tm_multiply(final_m, tm.m.data(), char_m);
 
 //printf("final_m = %f,%f,%f,%f,%f,%f\n", final_m[0], final_m[1], final_m[2], final_m[3], final_m[4], final_m[5]);
     double final_after_ctm[6];

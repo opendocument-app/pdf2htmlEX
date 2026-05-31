@@ -5,6 +5,7 @@
  * Copyright (C) 2013 Lu Wang <coolwanglu@gmail.com>
  */
 
+#include <memory>
 #include <poppler-config.h>
 
 #include "HTMLRenderer/HTMLRenderer.h"
@@ -55,8 +56,8 @@ void BackgroundRenderer::proof_begin_text_object(GfxState *state, OutputDev * de
     {
         PDFRectangle rect(0, 0, state->getPageWidth(), state->getPageHeight());
         proof_state.reset(new GfxState(state->getHDPI(), state->getVDPI(), &rect, state->getRotate(), dev->upsideDown()));
-        proof_state->setFillColorSpace(new GfxDeviceRGBColorSpace());
-        proof_state->setStrokeColorSpace(new GfxDeviceRGBColorSpace());
+        proof_state->setFillColorSpace(std::make_unique<GfxDeviceRGBColorSpace>());
+        proof_state->setStrokeColorSpace(std::make_unique<GfxDeviceRGBColorSpace>());
     }
 
     // Save original render mode in proof_state, and restore in proof_end_text_object()
@@ -72,7 +73,7 @@ void BackgroundRenderer::proof_begin_string(GfxState *state, OutputDev * dev)
         return;
 
     double lx = state->getFontSize() / 70, ly = lx;
-    tm_transform(state->getTextMat(), lx, ly, true);
+    tm_transform(state->getTextMat().data(), lx, ly, true);
     proof_state->setLineWidth(sqrt(lx * lx + ly * ly));
 
     static const Color red(1, 0, 0), green(0, 1, 0), blue(0, 0, 1), yellow(1, 1, 0), white(1, 1, 1);

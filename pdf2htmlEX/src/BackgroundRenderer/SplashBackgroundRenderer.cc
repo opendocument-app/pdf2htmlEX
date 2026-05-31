@@ -20,7 +20,7 @@ using std::ifstream;
 const SplashColor SplashBackgroundRenderer::white = {255,255,255};
 
 SplashBackgroundRenderer::SplashBackgroundRenderer(const string & imgFormat, HTMLRenderer * html_renderer, const Param & param)
-    : SplashOutputDev(splashModeRGB8, 4, false, (SplashColorPtr)(&white), true, splashThinLineSolid) // DCRH: Make thin line mode = solid
+    : SplashOutputDev(splashModeRGB8, 4, (SplashColorPtr)(&white), true, splashThinLineSolid) // DCRH: Make thin line mode = solid
     , html_renderer(html_renderer)
     , param(param)
     , format(imgFormat)
