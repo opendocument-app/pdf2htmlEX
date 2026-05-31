@@ -75,7 +75,7 @@ void SplashBackgroundRenderer::beginString(GfxState *state, const GooString * st
 {
     if (param.proof == 2)
         proof_begin_string(state, this);
-    SplashOutputDev::beginString(state, str);
+    SplashOutputDev::beginString(state, *str);
 }
 
 void SplashBackgroundRenderer::endTextObject(GfxState *state)
@@ -125,8 +125,8 @@ bool SplashBackgroundRenderer::render_page(PDFDoc * doc, int pageno)
         throw string("Image format not supported: ") + format;
 
     SplashError e = bitmap->writeImgFile(splashImageFileFormat, (const char *)fn, param.actual_dpi, param.actual_dpi);
-    if (e != splashOk)
-        throw string("Cannot write background image. SplashErrorCode: ") + std::to_string(e);
+    if (e != SplashError::NoError)
+        throw string("Cannot write background image. SplashErrorCode: ") + std::to_string((int)e);
 
     if(param.embed_image)
         html_renderer->tmp_files.add((const char *)fn);

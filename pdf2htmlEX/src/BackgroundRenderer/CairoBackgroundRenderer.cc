@@ -85,7 +85,7 @@ void CairoBackgroundRenderer::beginString(GfxState *state, const GooString * str
 {
     if (param.proof == 2)
         proof_begin_string(state, this);
-    CairoOutputDev::beginString(state, str);
+    CairoOutputDev::beginString(state, *str);
 }
 
 void CairoBackgroundRenderer::endTextObject(GfxState *state)
