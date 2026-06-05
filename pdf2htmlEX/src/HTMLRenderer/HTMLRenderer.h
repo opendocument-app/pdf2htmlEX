@@ -109,7 +109,7 @@ struct HTMLRenderer : OutputDev
     // box is the crop box?
     bool needClipToCropBox() override { return true; }
 
-    void setDefaultCTM(const double *ctm) override;
+    void setDefaultCTM(const std::array<double, 6> &ctm) override;
 
     // Start a page.
     void startPage(int pageNum, GfxState *state, XRef * xref) override;
@@ -176,7 +176,7 @@ struct HTMLRenderer : OutputDev
     void eoFill(GfxState *state) override;
     bool axialShadedFill(GfxState *state, GfxAxialShading *shading, double tMin, double tMax) override;
 
-    void beginTransparencyGroup(GfxState * /*state*/, const double * /*bbox*/,
+    void beginTransparencyGroup(GfxState * /*state*/, const std::array<double, 4> & /*bbox*/,
                                       GfxColorSpace * /*blendingColorSpace*/,
                                       bool /*isolated*/, bool /*knockout*/,
                                       bool /*forSoftMask*/) override;

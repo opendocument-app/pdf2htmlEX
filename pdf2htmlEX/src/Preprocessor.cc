@@ -89,12 +89,7 @@ void Preprocessor::drawChar(GfxState *state, double x, double y,
     cur_code_map[code] = 1;
 }
 
-void Preprocessor::startPage(int pageNum, GfxState *state)
-{
-    startPage(pageNum, state, nullptr);
-}
-
-void Preprocessor::startPage(int pageNum, GfxState *state, XRef * xref)
+void Preprocessor::startPage(int pageNum, GfxState *state, XRef *xref)
 {
     max_width = max<double>(max_width, state->getPageWidth());
     max_height = max<double>(max_height, state->getPageHeight());

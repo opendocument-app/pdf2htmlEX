@@ -43,7 +43,6 @@ public:
 
     // Start a page.
     // UGLY: These 2 versions are for different versions of poppler
-    void startPage(int pageNum, GfxState *state) override;
     void startPage(int pageNum, GfxState *state, XRef * xref) override;
 
     const char * get_code_map (long long font_id) const;
