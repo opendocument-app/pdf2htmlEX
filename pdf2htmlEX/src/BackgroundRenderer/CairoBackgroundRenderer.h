@@ -51,9 +51,6 @@ public:
   void updateRender(GfxState *state);
 
 protected:
-  void setMimeData(GfxState *state, Stream *str, Object *ref, GfxImageColorMap *colorMap, cairo_surface_t *image, int height) override;
-
-protected:
   HTMLRenderer * html_renderer;
   const Param & param;
   cairo_surface_t * surface;
