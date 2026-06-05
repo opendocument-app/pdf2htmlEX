@@ -76,7 +76,7 @@ namespace pdf2htmlEX {
 struct HTMLRenderer : OutputDev
 {
     HTMLRenderer(const char* progPath, Param & param);
-    virtual ~HTMLRenderer();
+    ~HTMLRenderer() override;
 
     void process(PDFDoc * doc);
 
@@ -88,102 +88,102 @@ struct HTMLRenderer : OutputDev
     
     // Does this device use upside-down coordinates?
     // (Upside-down means (0,0) is the top left corner of the page.)
-    virtual bool upsideDown() { return false; }
+    bool upsideDown() override { return false; }
 
     // Does this device use drawChar() or drawString()?
-    virtual bool useDrawChar() { return false; }
+    bool useDrawChar() override { return false; }
 
     // Does this device use functionShadedFill(), axialShadedFill(), and
     // radialShadedFill()?  If this returns false, these shaded fills
     // will be reduced to a series of other drawing operations.
-    virtual bool useShadedFills(int type) { return (type == 2) ? true: false; }
+    bool useShadedFills(int type) override { return (type == 2) ? true: false; }
 
     // Does this device use beginType3Char/endType3Char?  Otherwise,
     // text in Type 3 fonts will be drawn with drawChar/drawString.
-    virtual bool interpretType3Chars() { return false; }
+    bool interpretType3Chars() override { return false; }
 
     // Does this device need non-text content?
-    virtual bool needNonText() { return (param.process_nontext) ? true: false; }
+    bool needNonText() override { return (param.process_nontext) ? true: false; }
 
     // Does this device need to clip pages to the crop box even when the
     // box is the crop box?
-    virtual bool needClipToCropBox() { return true; }
+    bool needClipToCropBox() override { return true; }
 
-    virtual void setDefaultCTM(const double *ctm);
+    void setDefaultCTM(const double *ctm) override;
 
     // Start a page.
-    virtual void startPage(int pageNum, GfxState *state, XRef * xref);
+    void startPage(int pageNum, GfxState *state, XRef * xref) override;
 
     // End a page.
-    virtual void endPage();
+    void endPage() override;
 
     /*
      * To optimize false alarms
      * We just mark as changed, and recheck if they have been changed when we are about to output a new string
      */
 
-    virtual void restoreState(GfxState * state);
+    void restoreState(GfxState * state) override;
 
-    virtual void saveState(GfxState *state);
+    void saveState(GfxState *state) override;
 
-    virtual void updateAll(GfxState * state);
+    void updateAll(GfxState * state) override;
 
-    virtual void updateRise(GfxState * state);
-    virtual void updateTextPos(GfxState * state);
-    virtual void updateTextShift(GfxState * state, double shift);
+    void updateRise(GfxState * state) override;
+    void updateTextPos(GfxState * state) override;
+    void updateTextShift(GfxState * state, double shift) override;
 
-    virtual void updateFont(GfxState * state);
-    virtual void updateCTM(GfxState * state, double m11, double m12, double m21, double m22, double m31, double m32);
-    virtual void updateTextMat(GfxState * state);
-    virtual void updateHorizScaling(GfxState * state);
+    void updateFont(GfxState * state) override;
+    void updateCTM(GfxState * state, double m11, double m12, double m21, double m22, double m31, double m32) override;
+    void updateTextMat(GfxState * state) override;
+    void updateHorizScaling(GfxState * state) override;
 
-    virtual void updateCharSpace(GfxState * state);
-    virtual void updateWordSpace(GfxState * state);
+    void updateCharSpace(GfxState * state) override;
+    void updateWordSpace(GfxState * state) override;
 
-    virtual void updateRender(GfxState * state);
+    void updateRender(GfxState * state) override;
 
-    virtual void updateFillColorSpace(GfxState * state);
-    virtual void updateStrokeColorSpace(GfxState * state);
-    virtual void updateFillColor(GfxState * state);
-    virtual void updateStrokeColor(GfxState * state);
+    void updateFillColorSpace(GfxState * state) override;
+    void updateStrokeColorSpace(GfxState * state) override;
+    void updateFillColor(GfxState * state) override;
+    void updateStrokeColor(GfxState * state) override;
 
 
     /*
      * Rendering
      */
 
-    virtual void clip(GfxState * state);
-    virtual void eoClip(GfxState * state);
-    virtual void clipToStrokePath(GfxState * state);
+    void clip(GfxState * state) override;
+    void eoClip(GfxState * state) override;
+    void clipToStrokePath(GfxState * state) override;
     
-    virtual void drawString(GfxState * state, const GooString * s);
+    void drawString(GfxState * state, const GooString * s) override;
 
-    virtual void drawImage(GfxState * state, Object * ref, Stream * str,
+    void drawImage(GfxState * state, Object * ref, Stream * str,
                  int width, int height, GfxImageColorMap * colorMap,
-                 bool interpolate, const int *maskColors, bool inlineImg);
+                 bool interpolate, const int *maskColors, bool inlineImg) override;
 
-    virtual void drawSoftMaskedImage(GfxState *state, Object *ref, Stream *str,
+    void drawSoftMaskedImage(GfxState *state, Object *ref, Stream *str,
                        int width, int height,
                        GfxImageColorMap *colorMap,
                        bool interpolate,
                        Stream *maskStr,
                        int maskWidth, int maskHeight,
                        GfxImageColorMap *maskColorMap,
-                       bool maskInterpolate);
+                       bool maskInterpolate) override;
 
-    virtual void stroke(GfxState *state); 
-    virtual void fill(GfxState *state);
-    virtual void eoFill(GfxState *state);
-    virtual bool axialShadedFill(GfxState *state, GfxAxialShading *shading, double tMin, double tMax);
+    void stroke(GfxState *state) override;
+    void fill(GfxState *state) override;
+    void eoFill(GfxState *state) override;
+    bool axialShadedFill(GfxState *state, GfxAxialShading *shading, double tMin, double tMax) override;
 
-  virtual void beginTransparencyGroup(GfxState * /*state*/, const double * /*bbox*/,
+    void beginTransparencyGroup(GfxState * /*state*/, const double * /*bbox*/,
                                       GfxColorSpace * /*blendingColorSpace*/,
                                       bool /*isolated*/, bool /*knockout*/,
-                                      bool /*forSoftMask*/);
-  virtual void endTransparencyGroup(GfxState * /*state*/);
+                                      bool /*forSoftMask*/) override;
+    void endTransparencyGroup(GfxState * /*state*/) override;
 
 
-    virtual void processLink(AnnotLink * al);
+    void processLink(AnnotLink * al) override;
 
     /*
      * Covered text handling.

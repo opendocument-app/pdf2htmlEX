@@ -29,20 +29,20 @@ class CairoBackgroundRenderer : public BackgroundRenderer, CairoOutputDev
 public:
   CairoBackgroundRenderer(HTMLRenderer * html_renderer, const Param & param);
 
-  virtual ~CairoBackgroundRenderer();
+  ~CairoBackgroundRenderer() override;
 
-  virtual void init(PDFDoc * doc);
-  virtual bool render_page(PDFDoc * doc, int pageno);
-  virtual void embed_image(int pageno);
+  void init(PDFDoc * doc) override;
+  bool render_page(PDFDoc * doc, int pageno) override;
+  void embed_image(int pageno) override;
 
   // Does this device use beginType3Char/endType3Char?  Otherwise,
   // text in Type 3 fonts will be drawn with drawChar/drawString.
-  virtual bool interpretType3Chars() { return !param.process_type3; }
+  bool interpretType3Chars() override { return !param.process_type3; }
 
-  virtual void drawChar(GfxState *state, double x, double y,
+  void drawChar(GfxState *state, double x, double y,
       double dx, double dy,
       double originX, double originY,
-      CharCode code, int nBytes, const Unicode *u, int uLen);
+      CharCode code, int nBytes, const Unicode *u, int uLen) override;
 
   //for proof
   void beginTextObject(GfxState *state);
@@ -51,7 +51,7 @@ public:
   void updateRender(GfxState *state);
 
 protected:
-  virtual void setMimeData(GfxState *state, Stream *str, Object *ref, GfxImageColorMap *colorMap, cairo_surface_t *image);
+  void setMimeData(GfxState *state, Stream *str, Object *ref, GfxImageColorMap *colorMap, cairo_surface_t *image) override;
 
 protected:
   HTMLRenderer * html_renderer;

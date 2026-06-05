@@ -26,25 +26,25 @@ namespace pdf2htmlEX {
 class Preprocessor : public OutputDev {
 public:
     Preprocessor(const Param & param);
-    virtual ~Preprocessor(void);
+    ~Preprocessor(void) override;
 
     void process(PDFDoc * doc);
 
-    virtual bool upsideDown() { return false; }
-    virtual bool useDrawChar() { return true; }
-    virtual bool interpretType3Chars() { return false; }
-    virtual bool needNonText() { return false; }
-    virtual bool needClipToCropBox() { return true; }
+    bool upsideDown() override { return false; }
+    bool useDrawChar() override { return true; }
+    bool interpretType3Chars() override { return false; }
+    bool needNonText() override { return false; }
+    bool needClipToCropBox() override { return true; }
 
-    virtual void drawChar(GfxState *state, double x, double y,
+    void drawChar(GfxState *state, double x, double y,
       double dx, double dy,
       double originX, double originY,
-      CharCode code, int nBytes, const Unicode *u, int uLen);
+      CharCode code, int nBytes, const Unicode *u, int uLen) override;
 
     // Start a page.
     // UGLY: These 2 versions are for different versions of poppler
-    virtual void startPage(int pageNum, GfxState *state);
-    virtual void startPage(int pageNum, GfxState *state, XRef * xref);
+    void startPage(int pageNum, GfxState *state) override;
+    void startPage(int pageNum, GfxState *state, XRef * xref) override;
 
     const char * get_code_map (long long font_id) const;
     double get_max_width (void) const { return max_width; }
