@@ -96,8 +96,8 @@ private:
                 T * location, const Tv & default_value, 
                 const char * description, bool dont_show_default);
 
-        virtual void parse (const char * arg) const;
-        virtual void show_usage (std::ostream & out) const;
+        void parse (const char * arg) const override;
+        void show_usage (std::ostream & out) const override;
 
     private:
         T * location;

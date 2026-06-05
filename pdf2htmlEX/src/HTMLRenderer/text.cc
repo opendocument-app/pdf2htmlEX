@@ -23,9 +23,9 @@ using std::none_of;
 using std::cerr;
 using std::endl;
 
-void HTMLRenderer::drawString(GfxState * state, const GooString * s)
+void HTMLRenderer::drawString(GfxState * state, const std::string& s)
 {
-    if(s->empty())
+    if(s.empty())
         return;
 
     auto font = state->getFont();
@@ -58,8 +58,8 @@ void HTMLRenderer::drawString(GfxState * state, const GooString * s)
 
     // Now ready to output
     // get the unicodes
-    const char *p = s->c_str();
-    int len = s->size();
+    const char *p = s.c_str();
+    int len = s.size();
 
     //accumulated displacement of chars in this string, in text object space
     double dx = 0;
@@ -188,7 +188,7 @@ void HTMLRenderer::drawString(GfxState * state, const GooString * s)
 
 bool HTMLRenderer::is_char_covered(int index)
 {
-    auto covered = covered_text_detector.get_chars_covered();
+    const auto& covered = covered_text_detector.get_chars_covered();
     if (index < 0 || index >= (int)covered.size())
     {
         std::cerr << "Warning: HTMLRenderer::is_char_covered: index out of bound: "

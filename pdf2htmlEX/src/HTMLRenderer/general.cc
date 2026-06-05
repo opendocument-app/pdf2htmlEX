@@ -221,9 +221,9 @@ bool HTMLRenderer::renderPage(PDFDoc *doc, int pageno)
     return false;
 }
 
-void HTMLRenderer::setDefaultCTM(const double *ctm)
+void HTMLRenderer::setDefaultCTM(const std::array<double, 6> &ctm)
 {
-    memcpy(default_ctm, ctm, sizeof(default_ctm));
+    memcpy(default_ctm, ctm.data(), sizeof(default_ctm));
 }
 
 void HTMLRenderer::startPage(int pageNum, GfxState *state, XRef * xref)
