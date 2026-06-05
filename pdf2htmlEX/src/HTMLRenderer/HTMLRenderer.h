@@ -156,7 +156,7 @@ struct HTMLRenderer : OutputDev
     void eoClip(GfxState * state) override;
     void clipToStrokePath(GfxState * state) override;
     
-    void drawString(GfxState * state, const GooString * s) override;
+    void drawString(GfxState * state, const std::string& s) override;
 
     void drawImage(GfxState * state, Object * ref, Stream * str,
                  int width, int height, GfxImageColorMap * colorMap,
