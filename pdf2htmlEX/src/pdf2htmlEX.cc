@@ -16,7 +16,6 @@
 #include <getopt.h>
 
 #include <poppler-config.h>
-#include <goo/GooString.h>
 
 #include <Object.h>
 #include <PDFDoc.h>
@@ -414,17 +413,17 @@ int main(int argc, char **argv)
 
     try
     {
-        std::optional<GooString> ownerPW;
+        std::optional<std::string> ownerPW;
         if (!param.owner_password.empty()) {
-          ownerPW = GooString(param.owner_password);
+          ownerPW = param.owner_password;
         }
 
-        std::optional<GooString> userPW;
+        std::optional<std::string> userPW;
         if (!param.user_password.empty()) {
-          userPW = GooString(param.user_password);
+          userPW = param.user_password;
         }
 
-        GooString fileName(param.input_filename);
+        std::string fileName(param.input_filename);
 
         // open PDF file
         std::unique_ptr<PDFDoc> doc(PDFDocFactory().createPDFDoc(fileName, ownerPW, userPW));

@@ -46,12 +46,12 @@ public:
 
   //for proof
   void beginTextObject(GfxState *state);
-  void beginString(GfxState *state, const GooString * str);
+  void beginString(GfxState *state, const std::string & str);
   void endTextObject(GfxState *state);
   void updateRender(GfxState *state);
 
 protected:
-  void setMimeData(GfxState *state, Stream *str, Object *ref, GfxImageColorMap *colorMap, cairo_surface_t *image) override;
+  void setMimeData(GfxState *state, Stream *str, Object *ref, GfxImageColorMap *colorMap, cairo_surface_t *image, int height) override;
 
 protected:
   HTMLRenderer * html_renderer;

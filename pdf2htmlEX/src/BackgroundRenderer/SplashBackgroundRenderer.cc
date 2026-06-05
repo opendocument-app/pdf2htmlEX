@@ -71,11 +71,11 @@ void SplashBackgroundRenderer::beginTextObject(GfxState *state)
     SplashOutputDev::beginTextObject(state);
 }
 
-void SplashBackgroundRenderer::beginString(GfxState *state, const GooString * str)
+void SplashBackgroundRenderer::beginString(GfxState *state, const std::string & str)
 {
     if (param.proof == 2)
         proof_begin_string(state, this);
-    SplashOutputDev::beginString(state, str->toStr());
+    SplashOutputDev::beginString(state, str);
 }
 
 void SplashBackgroundRenderer::endTextObject(GfxState *state)
