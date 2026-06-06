@@ -406,7 +406,7 @@ void DrawingTracer::draw_char(GfxState *state, double x, double y, double width,
     memcpy(tm.m.data(), state->getTextMat().data(), sizeof(tm.m));
 
 //printf("tm = %f,%f,%f,%f,%f,%f\n", tm.m[0], tm.m[1], tm.m[2], tm.m[3], tm.m[4], tm.m[5]);
-    double cx = state->getCurX(), cy = state->getCurY(), fs = state->getFontSize(),
+    double cx = state->getCurTextX(), cy = state->getCurTextY(), fs = state->getFontSize(),
         ry = state->getRise(), h = state->getHorizScaling();
 
 //printf("cx=%f,cy=%f,fs=%f,ry=%f,h=%f\n", cx,cy,fs,ry,h);
